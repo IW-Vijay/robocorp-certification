@@ -51,15 +51,18 @@ def get_orders():
 
 
 def open_robot_order_website(orders):
+    """Opne website"""
     browser.goto("https://robotsparebinindustries.com/#/robot-order")
     page = browser.page()
     return page
     
 def close_popup(page):
+    """Deal with the popup"""
     page.click('//*[@id="root"]/div/div[2]/div/div/div/div/div/button[2]')
 
 
 def fill_the_from(page, order):
+    """Fill the form"""
     page.select_option("#head", order["Head"])
     page.click(f'//*[@id="root"]/div/div[1]/div/div[1]/form/div[2]/div/div[{order["Body"]}]/label')
     page.fill('//*[@id="root"]/div/div[1]/div/div[1]/form/div[3]/input', order["Legs"])
@@ -68,15 +71,18 @@ def fill_the_from(page, order):
 
 
 def screenshot_receipt(page, order_number):
+    """Take screenshot of receipt"""
     page.screenshot(path=f"output/receipt_{order_number}.png")
 
 def store_receipt_as_pdf(page, order_number):
+    """Store receipt as PDF"""
     receipt_html = page.locator("#receipt").inner_html()
 
     pdf = PDF()
     pdf.html_to_pdf(receipt_html, f"output/receipt_{order_number}.pdf")  
 
 def embed_screenshot_to_receipt(order_number):
+    """Combine pdf and screenshot in pdf"""
     pdf = PDF()
     filesystem = FileSystem()
     pdf.add_files_to_pdf(
@@ -88,9 +94,11 @@ def embed_screenshot_to_receipt(order_number):
 
 
 def order_another_robot(page):
+    """Move to another order"""
     page.click('#order-another')
     
 def archive_receipts(receipt_to_archive):
+    """Create zip of all the receipt"""
     fileSystem = FileSystem()
     archive = Archive()
     fileSystem.create_directory("output/archived_receipts")

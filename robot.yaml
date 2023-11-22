@@ -4,7 +4,6 @@
 tasks:
   Minimal Task:
     shell: python -m robocorp.tasks run tasks.py
-    #shell: python test.py
 
 environmentConfigs:
   - environment_windows_amd64_freeze.yaml
