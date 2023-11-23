@@ -22,18 +22,12 @@ def order_robots_from_RobotSpareBin():
     receipt_to_archive = []
     for order in orders:
         close_popup(page)
-        Failed = True
-        while Failed:
-            try:
-                fill_the_from(page, order)
-                store_receipt_as_pdf(page, order["Order number"])
-                screenshot_receipt(page, order["Order number"])
-                receipt = embed_screenshot_to_receipt(order["Order number"])
-                receipt_to_archive.append(receipt)
-                order_another_robot(page)
-                Failed = False
-            except:
-                Failed = True
+        fill_the_from(page, order)
+        store_receipt_as_pdf(page, order["Order number"])
+        screenshot_receipt(page, order["Order number"])
+        receipt = embed_screenshot_to_receipt(order["Order number"])
+        receipt_to_archive.append(receipt)
+        order_another_robot(page)
     archive_receipts(receipt_to_archive)
 
 
@@ -67,7 +61,11 @@ def fill_the_from(page, order):
     page.click(f'//*[@id="root"]/div/div[1]/div/div[1]/form/div[2]/div/div[{order["Body"]}]/label')
     page.fill('//*[@id="root"]/div/div[1]/div/div[1]/form/div[3]/input', order["Legs"])
     page.fill("#address", order["Address"])
-    page.click('#order')
+    while True:
+        page.click("#order")
+        
+        if not page.locator("//div[@class='alert alert-danger']").is_visible():
+            break
 
 
 def screenshot_receipt(page, order_number):
